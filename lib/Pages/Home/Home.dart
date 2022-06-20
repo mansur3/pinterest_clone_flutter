@@ -5,6 +5,10 @@ import 'package:pinterest/Pages/Message/Message.dart';
 import 'package:pinterest/Pages/Profile/Profile.dart';
 import 'package:pinterest/Pages/Search/Search.dart';
 
+
+
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 // class Home extends StatefulWidget {
 //   const Home({Key? key}) : super(key: key);
 //
@@ -126,18 +130,128 @@ import 'package:pinterest/Pages/Search/Search.dart';
 // }
 //
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var number;
+
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("This is the Home page"),
+    return SafeArea(
+      child: GridView.custom(
+        gridDelegate: SliverWovenGridDelegate.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 2,
+          crossAxisSpacing: 3,
+          pattern: [
+            WovenGridTile(1),
+            WovenGridTile(
+              5 / 7,
+              crossAxisRatio: 0.9,
+              alignment: AlignmentDirectional.centerEnd,
+            ),
+          ],
+        ),
+        childrenDelegate: SliverChildBuilderDelegate(
+              (context, index) => GestureDetector(
+                onTap: () => {
+                  setState(() => {
+                    number = index,
+                  }),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  ShowOneImage({number})),
+                  )
+                },
+                child: new Container(
+                  height: 120.0,
+                  width: 120.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage('https://picsum.photos/500/500?random=$index'),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: BoxShape.rectangle,
+                  ),
+                ),
+              ),
+        ),
+      ),
     );
   }
 }
 
 
+
+class ShowOneImage extends StatefulWidget {
+  // const ShowOneImage({Key? key, index}) : super(key: key);
+  var index;
+  ShowOneImage(Set<int> set, {@required this.index});
+
+
+  @override
+  State<ShowOneImage> createState() => _ShowOneImageState();
+}
+
+class _ShowOneImageState extends State<ShowOneImage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                height: 400.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: NetworkImage('https://picsum.photos/1/237/200/300'),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.rectangle,
+                ),
+              ),
+              Text("This is the name of the file"),
+            ],
+          )
+        ),
+      ),
+    );
+  }
+}
+
+
+// Container(
+// child: StaggeredGridView.countBuilder(
+// crossAxisCount: 4,
+// itemCount: 15,
+// itemBuilder: (BuildContext context, int index) => new Container(
+// height: 120.0,
+// width: 120.0,
+// decoration: BoxDecoration(
+// image: DecorationImage(
+// image: NetworkImage('https://picsum.photos/500/500?random=$index'),
+// fit: BoxFit.fill,
+// ),
+// shape: BoxShape.rectangle,
+// ),
+// ),
+// staggeredTileBuilder: (int index) =>
+// StaggeredTile.count(2, index.isEven ? 3 : 2),
+// mainAxisSpacing: 4.0,
+// crossAxisSpacing: 4.0,
+// ),
+// ),
 
 
 
